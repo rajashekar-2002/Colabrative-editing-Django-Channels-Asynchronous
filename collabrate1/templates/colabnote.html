@@ -1,0 +1,248 @@
+{%extends 'base.html'%}
+
+{% block notebook %}
+
+
+
+
+    <!-- add new made container to upper older container -->
+
+    <div class="container-fluid h-100 border border-red">
+        <div class="row h-100">
+            <div class="col-3 h-100 border border-red">
+
+   
+                <!-- add participants -->
+
+               <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mb-3 mt-2 ml-5" data-toggle="modal" data-target="#exampleModal">
+  +Add participants
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-success" id="exampleModalLabel">+Add participants</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+        <form action="{% url 'addparticipants' %}" method="POST">
+          {%csrf_token%}
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+          
+          
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+          
+
+
+
+                
+
+
+
+
+                <!-- list group -->
+                <div class="list-group">
+                    {% for i in participants %}
+                             <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-dark mt-1">{{i|truncatechars:20}} <button class="float-right " style="background-color:transparent; border:none;" type="submit"><a> <span class="badge badge-pill badge-primary">X</span> </a></button> </span> </li>
+                    
+                              
+              
+                            </ul>
+                    {%endfor%}
+                  </div>
+
+
+            </div>
+
+            <div class="col">
+
+                <nav class="navbar navbar-black bg-black">
+                    <a class=" float-left" href="#"> Group name : {{request.session.grpname}}</a>
+                    <a class=" float-left" href="#">created by : {{request.session.createdby}}</a>
+                 
+                              <button type="button"  onclick="save()" class="btn btn-primary float-right mt-2 mr-3 ml-2  "> 
+                                <span class="fa fa-clone "> 
+                                    Save
+                                    <!-- add 4.5 link bootstrap -->
+                                  <div class="spinner-grow spinner-grow-sm" role="status">
+                                    <span class="visually-hidden"></span>
+                                  </div>
+
+                                </span> 
+                              
+                            </button>
+                  </nav>
+
+
+                  <hr style="width:90%; background-color:white;">
+
+
+               
+                  
+                  <form style="height:80%" action="{% url 'savecolabnote' %}" method="POST">
+                      {%csrf_token%}
+                      <textarea style="height: 100%; width: 100%;" name="mytextarea" id="mytextarea2">{{content}}</textarea>
+                      <button style="visibility:hidden;" type="submit" id="savecolabnote"></button>
+                  </form>
+                  
+                 
+             
+                        
+             
+
+                     
+                      
+                          
+                  
+                  
+               
+
+
+
+
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+    {{request.session.grpname|json_script:'grpname'}}
+    {{request.session.user|json_script:'email'}}
+
+
+
+
+
+  <script>
+              //using ws properties
+
+              var savecolabnote=document.getElementById('savecolabnote' )
+              function save()
+              {
+                savecolabnote.click();
+              }
+
+
+           
+              //var ws=new WebSocket('ws://127.0.0.1:8000/ws/ac/')
+              const grpname=JSON.parse(document.getElementById('grpname').textContent)
+              const email=JSON.parse(document.getElementById('email').textContent)
+              var ws=new WebSocket(
+               'ws://'+window.location.host+'/ws/sc/'+grpname+'/'+email+'/' )
+                ws.onopen=function(){
+                      console.log('websocket connection open.......................')
+  
+                  }
+
+
+                  ws.onmessage=function(event){
+                    console.log('message received from server',event.data)
+                    console.log('type of data',typeof(event.data))
+                    //var data=JSON.parse(event.data)
+                    const data=JSON.parse(event.data)
+               //     document.getElementById('chatlog').value = (data.msg)
+                 //   document.getElementById('mytextarea1').value = (data.msg)
+                    document.getElementById('mytextarea2').value = (data.msg)
+                    
+             
+
+                    //tinymce.get('mytextarea9').setContent(data.msg);
+                    };
+                   
+
+                 
+               
+       
+
+            text=document.getElementById('mytextarea2')
+              text.addEventListener('input', function(event){
+               
+                  const message = text.value;
+                    if (message.length > 2) {
+                       // Trigger the button's click event
+                    
+                       ws.send(JSON.stringify({'msg':message}))
+                     }
+                   
+                    })
+        
+ 
+                 
+
+
+      
+
+         
+       
+
+         
+
+
+
+                
+   
+
+                 
+
+                 ws.onmerror=function(event){
+                  console.log('message error',event)
+              }
+              ws.onclose=function(event){
+                  console.log('websocket closed',event)
+              }
+
+
+    </script>
+
+  
+
+           
+
+
+
+        
+
+
+
+
+
+
+    
+
+
+
+
+{% endblock %}

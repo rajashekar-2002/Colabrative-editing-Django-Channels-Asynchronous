@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block recentnotes %}
+
+
+
+<div class="col-8 mb-5 mt-5 mr-5 ml-4 bg-dark round">
+    <h5 class="mt-2"> Recent updated notes....</h5>
+          <!-- horizontal scrolling -->
+    <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-4 pt-2 ">
+    
+      {% for i in notes%}
+                                                                      <!-- update here for gap -->
+    <div class="col-4 mr-0 pr-0">                                
+    <div class="card" style="width: 15rem; height:22rem">
+    <div class="card-body">
+      <h5 class="card-title text-dark"><u><a class="text-dark" href="/notes/{{i.notebook.book_name}}/content/{{i.notes_slug}}  "> {{i.notes_name}} </a></u></h5>
+     
+      
+      <small class="card-subtitle mb-2 text-dark">{{i.notes_created_on}}</small>
+      <p class=" text-dark">{{i.notes_text|truncatechars:180}}</p>
+      <small class="card-text text-dark"><u>last modeified on :{{i.notes_last_modified}}</u></small>
+    </div>
+    </div>
+
+  
+    </div> 
+    
+    {%endfor%}
+    </div> 
+    </div>
+
+    
+      <!-- display task -->
+      <!-- add vertical scrollable bar -->
+<div class="col-3 ml-1 mt-5 mb-5 bg-dark round">
+    <h5 class="mt-2">Tasks..</h5>
+            <ul class="list-group mt-2 ">
+
+                    {% for i in task%}
+                        <div>
+
+                          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start mb-2">
+                            <div class="d-flex w-100 justify-content-between mt-">
+                              <h6 class="mb-1">{{i.task_name}}</h6>
+                              
+                            </div>
+                            <span class="badge badge-primary badge-pill">{{i.task_date}} {{i.task_time}}</span>
+                          </a>
+                        </div>
+                        
+                      {%empty%}
+
+                      <div class="jumbotron jumbotron-fluid bg-dark">
+                        <div class="container">
+                          <h5 class="display-4">No tasks yet!</h5>
+                          <p class="lead">Add a task, conquer your day </p>
+                        </div>
+                      </div>
+                        
+                        
+
+                    {% endfor %}
+                  </ul>
+            
+</div>
+    
+    </div>
+    
+    </div>
+    
+
+
+{% endblock %}
+
+
+
+
+{% block attachments %}
+
+<div class="container h-30 mt-1 ml-5  ">
+  <div class="row h-100 ">
+  
+                          <!-- tab for notebook shared with me  -->
+                      <div class="col-12 bg-dark round pt-2 ml-3 " >
+                          <form action="{%url 'home'%}" method="POST">
+                              {%csrf_token%}
+                              <a ><button type="submit" name="submit_button"  value="allnotes" style="background: none; border: none; text-decoration: none; color:white"
+                                 onmouseover="this.style.textDecoration='underline' ;"
+                                 onmouseout="this.style.textDecoration='none';"> all notes </button> </a>
+                            <a> <button type="submit" name="submit_button" value="favourites" style="background: none; border: none; text-decoration: none; color:white"
+                              onmouseover="this.style.textDecoration='underline' ;"
+                              onmouseout="this.style.textDecoration='none';">favourites</button> </a>
+                           
+                            
+                          </form>
+                            
+                      </div>
+  
+                      <div w-100></div>
+  
+                      <div class="col-12 h-100 bg-dark ml-3 ">
+                        <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-3 pt-2 mr-0 ml-0 pr-0 pl-0"> 
+  {% for i in variable %}
+                          <div class="col-4 "> 
+                            <div class="card" style="width: 15rem; height:22rem;">
+                              <div class="card-body">
+                                <h5 class="card-title text-dark"><u><a class="text-dark" href="/notes/{{i.notebook.book_name}}/content/{{i.notes_slug}}  "> {{i.notes_name}} </a></u></h5>
+                                <small class="card-subtitle mb-2 text-dark">{{i.notes_created_on}}</small>
+                                <p class="card-text text-dark">{{i.notes_text|truncatechars:150}}</p>
+                                <small href="#" class="text-dark"><u>last modeified on :{{i.notes_last_modified}}</u></small>
+  
+                              </div>
+                            </div>
+                          </div> 
+    {%empty%}
+               
+                    <div class="jumbotron jumbotron-fluid bg-dark ml-5">
+                      <div class="container">
+                        <h1 class="display-4">No favourites yet!</h1>
+                        <p class="lead">"Keep your favorites within reach: Add notes to favorites for easy access and quick reference."</p>
+                      </div>
+                    </div>
+              
+
+  {% endfor%}
+                         
+                        </div>
+                      </div>
+  
+                      <!-- footer here-->
+  
+                          
+                    
+              </div>
+  
+  
+  
+                
+  </div>
+
+
+{% endblock %}

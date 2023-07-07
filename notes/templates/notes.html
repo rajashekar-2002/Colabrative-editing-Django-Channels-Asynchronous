@@ -1,0 +1,455 @@
+
+{% extends 'base.html' %}
+{% block notebook %}
+{%load countnotes%}
+{% load notebook_slug_tag %}
+
+
+
+{%if request.session.task_name != 'None'%}
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>{{request.session.task_name}}</strong> at {{request.session.task_date}}completed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+{%endif%}
+
+
+
+
+
+
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-3 ml-0 mr-0 pr-0 pl-0">
+
+                
+                                        <header>
+                                        
+                                            <h5 class="ml-2 mt-3 " style="display:inline">{{count}} Notes...</h6>
+                                            
+                                            <!-- <h6 class="text-right mr-3 mt-0"><a href="$" class="text-white"><span class="fa fa-filter"></span>filter</a></h5>  -->
+
+                                                <!-- <button></button> -->
+                                            <!-- <h6 class="text-right mr-3 mt-1"><a href="$" class="text-success"><span class="fa fa-file"></span>+ New Note</a></h6>  -->
+                                          
+                                                                                
+                                            
+
+                                            <div class="dropdown show">
+                                              <a class="btn btn-secondary  text-right float-left" style="background-color:transparent; border:none" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <h6><span class="fa fa-filter"></span>filter</h6>
+                                              </a>
+                                            
+                                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="{% url 'sort_notes' %}?sort=A-Z">A-Z</a>
+                                                <a class="dropdown-item" href="{% url 'sort_notes' %}?sort=Z-A">Z-A</a>
+                                                <a class="dropdown-item" href="{% url 'sort_notes' %}?sort=bookmark">bookmarked</a>
+                                                <a class="dropdown-item" href="{% url 'sort_notes' %}?sort=recent_used">recent used</a>
+                                                <a class="dropdown-item" href="{% url 'sort_notes' %}?sort=created_on">created on</a>
+                                               
+                                              </div>
+                                            </div>
+
+
+
+
+                                        {%comment%}pop up new note {%endcommment%}
+                                        
+                                        {%comment%}end pop up {%endcomment%}
+
+                                       
+                                              <button type="button" style="background-color:transparent; border:none" class="mr-2 mt-0 btn btn-primary text-success float-right" data-toggle="modal" data-target="#exampleModalLong">
+                                                <h6> <span class="fa fa-file"></span>+ New Note</h5>
+                                              </button>
+                                                           <!-- Button trigger modal -->
+
+
+                                                                  <!-- Modal -->
+                                                                  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                      <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                          <h5 class="modal-title text-success" id="exampleModalLongTitle">+New note</h5>
+                                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                          </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                          
+
+                                                                          <form action="{% url 'new_notes' %}" method="POST">
+                                                                            {%csrf_token%}
+                                                                  
+                                
+                                                                            <div class="form-group">
+                                                                      
+                                                                              <input type="text" class="form-control mt-0" name="note_name" aria-describedby="emailHelp" placeholder="note name here....">
+                                                                              <small id="emailHelp" class="form-text text-muted"></small>
+                                                                            </div>
+                                                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                                                          </form>
+
+
+                                                                        </div>
+                                                                        
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+
+                                                                
+                                        
+                                        </header>
+
+                                       
+                                        <div>  <hr style="width:90%; background-color:white;" class="mt-5"></div>
+                    
+                
+
+
+
+
+                                        {% for i in items %}
+                                                        <div class="scrolling-wrapper-y d-flex flex-column pt-2 pb-1"> 
+                                                            <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}} " ><div class="col-4 mr-0 ml-0" > 
+                                                            
+                                                                
+                                                            
+                                                                <div class="card "  id="jsfunctag" style="width: 18rem; height:14rem">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title text-dark"><u>{{i.notes_name|tagname:query}}</u></h5>
+                                                                    <small class="card-subtitle mb-2 text-dark">{{i.notes_created_on}}</small>
+                                                                    <p class=" text-dark">{{i.notes_text|truncatechars:60}}</p>
+
+                                                                    
+                                                                    {% for i in i.notes_slug|tags:request  %}
+                                                                    <span class="badge badge-primary align-items-end">{{i}}</span>
+                                                                  
+
+                                                                    {%endfor%}
+
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    
+                                                    
+                                                        
+                                        {%empty%}
+                                                        {%for i in notes%}
+                                                        <div class="scrolling-wrapper-y d-flex flex-column pt-2 pb-1"> 
+                                                            <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}} " >
+                                                                <div class="col-4 mr-0 ml-0" > 
+                                                                
+                                                                {% if i.notes_name == notes_content.notes_name or request.session.note == i.notes_slug %}
+                                                            
+                                                                <div class="card bg-success"  id="jsfunctag" style="width: 18rem; height:14rem">
+                                                                <div class="card-body">
+
+                                                                    {%if i.bookmark_notes == False %}
+                                                                    <h5 class="card-title"><u class="text-dark">{{i.notes_name}}  <a href="/notes/{{slug}}/bookmark/{{i.notes_name}}" class="float-right"><span class="fa fa-star checked" style="color:rgb(241, 241, 247);"></span></a></u></h5>
+                                                                    {%else%}
+                                                                    <h5 class="card-title"><u class="text-dark">{{i.notes_name}}  <a href="/notes/{{slug}}/bookmark/{{i.notes_name}}" class="float-right"><span class="fa fa-star checked" style="color:rgb(23, 23, 24);"></span></a></u></h5>
+                                                                    {%endif%}                                                                    
+                                                                    <small class="card-subtitle mb-2 text-dark">{{i.notes_created_on}}</small>
+                                                                    <p class=" text-dark">{{i.notes_text|truncatechars:60}}</p>
+
+
+                                                                    {% for i in i.notes_slug|tags:request %}
+                                                                    <span class="badge badge-primary ">{{i}}</span>
+                                                                    {%empty%}
+                                                                    {%endfor%}
+
+
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        
+                                                                {%else%}
+                                                           
+                                                                <div class="card "  id="jsfunctag" style="width: 18rem; height:14rem">
+                                                                    <div class="card-body">
+
+                                                                        {% if i.bookmark_notes == False %}
+                                                                        <h5 class="card-title"><u class="text-dark">{{i.notes_name}}  <a href="/notes/{{slug}}/bookmark/{{i.notes_name}}" class="float-right"><span class="fa fa-star checked" style="color:rgb(133, 133, 215);"></span></a></u></h5>
+                                                                        {%else%}
+                                                                        <h5 class="card-title"><u class="text-dark">{{i.notes_name}}  <a href="/notes/{{slug}}/bookmark/{{i.notes_name}}" class="float-right"><span class="fa fa-star checked" style="color:rgb(36, 223, 136);"></span></a></u></h5>
+                                                                        {%endif%}    
+
+                                                                        <small class="card-subtitle mb-2 text-dark">{{i.notes_created_on}}</small>
+                                                                        <p class=" text-dark">{{i.notes_text|truncatechars:60}}</p>
+
+                                                                        
+                                                                        {% for i in i.notes_slug|tags:request  %}
+                                                                        <span class="badge badge-primary">{{i}}</span>
+                                                                        {%empty%}
+                                                                        {%endfor%}
+
+
+                                                                        </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            
+                                                                {% endif %}
+                                                            
+                                                            
+                                                            
+                </div>
+                                                        
+                                                    {%endfor%}
+                                                        
+                                        {% endfor %}
+                                                        
+                                                        
+                                                        
+{%comment%} run empty tag for first time which displays all notes {%endcomment%}
+
+            </div>
+
+
+
+
+            <div class="col border border-white">
+
+                    <header class="mb-2">
+                        <nav class="navbar navbar-expand-lg justify-content-between black">
+                            <h5><span class="fa fa-book"></span> {{notes_content.notes_name}} from {{slug}}</h5>
+                            
+                              <form class="form-inline my-2 my-lg-0" action="{% url 'notessearch' %}", method="POST">
+                                {%csrf_token%}
+                                <input class="form-control mr-sm-2" name="notes_search" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                              </form>
+                              
+
+                            </nav>
+                            
+                            <small class="ml-4 text-white">last edited on :{{notes_content.notes_last_modified}}</small>
+
+
+                          
+
+                            <button type="button"  onclick="savefunction()" class="btn btn-primary float-right mt-2 mr-3 ml-2  "> 
+                                <span class="fa fa-clone "> 
+                                    Save
+                                    <!-- add 4.5 link bootstrap -->
+                                  <div class="spinner-grow spinner-grow-sm" role="status">
+                                    <span class="visually-hidden"></span>
+                                  </div>
+
+                                </span> 
+                              
+                            </button>
+
+                           
+
+                          
+
+                         
+
+
+
+
+                                <button type="" class="btn btn-success float-right mt-2 mr-3 " data-toggle="modal" data-target="#exampleModal" > 
+                                    <span class="fa fa-user-plus"></span> Attachment <span class="badge badge-light"></span>
+                                  </button>
+                                
+                           
+                     
+
+
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title text-dark" id="exampleModalLabel">Attachments...</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                        <form action="{%url 'attachment' %}" method="POST" enctype="multipart/form-data">
+                                                {%csrf_token%}
+
+                                                <input type="hidden" name="notebook" value="{{slug}}">
+                                                <input type="hidden" name="note" value="{{notes_content.notes_slug}}">
+
+                                                <div class="mb-3">
+                                                <label for="formFile" class="form-label">Default file input example</label>
+                                                <input class="form-control" name="attachment" type="file" id="formFile">
+                                           
+                                              </div>
+
+                                            
+                                       
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                  <button type="submit" class="btn btn-primary">Save </button>
+
+                                        </form>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              
+
+                            
+                            <!-- Button trigger modal -->
+
+  
+
+                              <br>         
+                    </header>
+
+
+
+    <div>
+                        <hr class="mt-5" style="width:90%; background-color:white;">
+
+
+
+
+                                    {%comment%} tags part starts here above textarea tinymce{%endcomment%}
+
+           
+                                    <form action="{%url 'tags'%}" method="POST">
+                                        {%csrf_token%}
+                                        <i class="fa fa-tag " ></i><input id="prod" style="width:80px ; border-radius:8px;" name="tags" placeholder=" tags..">
+                                        <button id="myBtn" type="submit" style="visibility:hidden"></button>
+                                    </form>
+            
+                                    {%comment%} display tags here{%endcomment%}
+
+
+                                    <div class="container">
+                                            
+                                    {% for i in request.session.session_tag %}
+                                    
+                                        
+                                        <span class="badge badge-primary" style='font-size:12px'>{{i}} <a href="{% url 'delete_tag'%}?delete_tag={{i}}"><button style="background-color:transparent; border:none;" type="submit">X</button></a></span>
+                    
+                                      
+                                    {%endfor%}
+                                            
+                                    </div>
+
+                                    {%comment%}why not to use query obj it shows home url prblm in returning {{request.get_full_path}}/?delete_tag={{i}} {%endcomment%}
+
+
+
+
+
+
+                {%comment%}end of display tags{%endcomment%}
+                     
+                            
+                            
+                            
+                            
+                            
+    </div>
+
+                            
+                            
+                         
+
+                        
+                    
+                  
+                    <p id="container"><br></p>
+
+                        {%comment%}tinymce{%endcomment%}
+                        
+                        <form action="{% url 'content' %}" method="POST">
+                            {%csrf_token%}
+                            <textarea id="mytextarea" name="mytextarea" style="height:150px;">{{notes_content.notes_text}}</textarea>
+                            
+                                <button type="submit" id="savebtn" style="visibility:hidden;">Save</button>
+                        
+                        </form>
+                     
+                        
+
+
+                        {%comment%}footer{%endcomment%}
+                        <footer>
+                            <div class="container-fluid " style="height:80px;">
+                                <div calss="row h-100">
+                                    <div class="col-12 ">
+                                
+                                    <div class="row">
+                                        {%for i in file%}
+                                        <span>   <a href="{{i.attach.url}} " download>  <span class="badge badge-light mr-2" style='font-size:12px'>{{i.attach.name}} </span> </a>            <a href=" {% url 'delete_img'%}?delete_img={{i.attach.name}} " > <button class="text-white pl-0 pr-0" style="background-color:transparent; border:none; " type="submit">X</button></a></span>
+                                        
+                                        {%endfor%}
+                                    </div>
+                                    
+
+                                    </div>
+                                </div>
+                            </div>
+                        </footer>
+
+                        
+
+               
+                    </div>
+
+
+
+
+                
+                            
+                </div>
+                         
+                          
+
+
+                    
+    
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

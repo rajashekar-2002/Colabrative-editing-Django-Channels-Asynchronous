@@ -1,0 +1,19 @@
+{%extends 'home.html' %}
+
+
+
+{%block attachments%}
+{%for i in variable%}
+<div class="row">
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text"><img class="card-img-top" src="{{i.attach.url}}" alt="Card image cap"></p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+</div>
+  {%endfor%}
+{%endblock%}

@@ -1,0 +1,45 @@
+
+{% extends 'base.html' %}
+{% block notebook %}
+{% load countnotes %}
+
+<div class="container-fluid " style="height:800px;" >
+    <div class="row h-100">
+        <div class="col-12">
+            {%if object%}
+            <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Notebook name</th>
+                    <th scope="col">shared by</th>
+                    <th scope="col">notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {%for i in object %}
+                  <tr>
+                    <td> <a href="/notes/{{i.notebook_slug}}">{{forloop.counter}}</a></td>
+                    <td> <a href="/notes/{{i.notebook_slug}}">{{i.notebook_name}}</a></td>
+                    <td> <a href="/notes/{{i.notebook_slug}}">{{i.shared_by}}</a></td>
+                    <td><span class="badge badge-pill badge-primary">{{i.notebook_slug|count_notes:request.session.user}}</span>  </td>
+
+                  </tr>
+                  
+                  {%endfor%}
+                </tbody>
+              </table>
+              {%else%}
+              <div class="jumbotron jumbotron-fluid bg-dark pt-9">
+                <div class="container">
+                  <h1 class="display-4">No notebook received yet!</h1>
+                  <p class="lead">shared notebook will be displayed here...</p>
+                </div>
+              </div>
+              {%endif%}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

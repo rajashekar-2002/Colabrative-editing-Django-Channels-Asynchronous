@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block notebook %}
+{% load countnotes %}
+
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="font-size:30px;" href="#">{{count}} Tasks...</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+</header>
+
+<div class="container-fluid bg-dark" style="height:50px;">
+  <div class="row h-100">
+    <div class="col">
+      <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-success float-right ml-2" >Add task +</button>
+      <a href="{%url 'delete_overdue'%}"><button type="button" class="btn btn-primary float-right">Delete all overdue task</button></a>
+      
+
+
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-light">
+              <h5 class="modal-title text-dark" id="exampleModalLabel">Add task..</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              
+              
+
+              <form class="float-left" action="{%url 'add_task'%}" method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group mt-0 mb-2">
+                  <input type="text" style="border-width:3px;" name="task" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Task name">
+                </div>
+                <label for="my_datetime">Datetime:</label>
+                <input class="float-left mt-1" name="datetime" type="datetime-local" id="my_datetime" name="my_datetime" required>
+                <br>
+                <button type="submit" class="btn btn-primary btn-sm mt-3">Add task</button>
+
+            </form>
+    
+
+
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+    <table class="table table-striped table-dark">
+        <thead>
+          <tr class="">
+         
+            <th scope="col">Task</th>
+            <th scope="col">DateTime</th>
+            <th scope="col">Rings in </th>
+          </tr>
+        </thead>
+        <tbody>
+
+  
+            {% for i in due_task %}
+            
+          <tr>
+     
+            <td>{{i.task_name}}</td>
+            <td>{{i.task_date}}</td>
+            <td>{{i.time_diff|abs_value}}</td>
+     
+            <td> <a href="/task/delete_task/{{i.task_name}}"> <button type="button" class="close" aria-label="Close" style="color:rgb(245, 242, 242);">
+              <span aria-hidden="true">&times;</span>
+            </button></a> 
+          </tr>
+
+       
+
+          {%endfor%}
+          {% for i in overdue %}
+           
+        
+      
+
+         
+          <tr class="table-danger text-dark ">
+     
+            <td>{{i.task_name}}</td>
+            <td>{{i.task_date}}</td>
+            <td>-{{i.time_diff|abs_value}}</td>
+     
+            <td> <a href="/task/delete_task/{{i.task_name}}"> <button type="button" class="close" aria-label="Close" style="color:rgb(16, 15, 15);">
+              <span aria-hidden="true">&times;</span>
+            </button></a>
+             </td>  
+          </tr>
+         
+        
+          {%endfor%}
+       
+          
+        </tbody>
+      </table>
+
+      {%endblock%}

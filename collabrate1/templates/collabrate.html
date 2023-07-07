@@ -1,0 +1,149 @@
+{%extends 'base.html'%}
+
+{% block notebook %}
+
+<!-- this page is copied from notebook -->
+
+<div class="container-fluid h-100">
+<div class="row height">
+  <div class="col-12">
+
+    <nav class="navbar justify-content-between black">
+      <h1 class="navbar-brand">Teams</h2>
+      
+  
+      <form class="form-inline", action="{% url 'notebook' %}" , method="POST">
+        {%csrf_token%}
+        <input class="form-control mr-sm-2" name="notebook_search" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </nav>
+    
+
+
+
+
+
+    <!-- <h5 class="text-right mr-3 mt-3"><a href="" class="text-success"><span class="fa fa-file"></span>+ New Notebook</a></h5>  -->
+
+    {%comment%}modal for new group model pop up here {%endcomment%}
+       
+    <!-- <h5 class="text-right mr-3 mt-3"><a href="" class="text-success"><span class="fa fa-file"></span>+ New Notebook</a></h5> -->
+                                <button type="button" class="btn btn-success float-right mr-3 " data-toggle="modal" data-target="#myModal"><span class="fa fa-file"></span>+ Group</button>
+
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                  <div class="modal-dialog">
+                                  
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                
+                                        <h4 class="modal-title text-success float-left">+ New Group </h4>
+                                      </div>
+                                      <div class="modal-body text-dark">
+                                        
+                                        <form action="{% url 'new_colab_grp' %}" method="POST">
+                                          {%csrf_token%}
+                                
+
+                                          <div class="form-group">
+                                            <label for="exampleInputEmail1">Group name</label>
+                                            <input type="text" class="form-control" name="grpname" aria-describedby="emailHelp" placeholder="Group name name here....">
+
+                                            <label for="exampleInputEmail1">Description</label>
+                                            <input type="text" class="form-control" name="desc" aria-describedby="emailHelp" placeholder="text here about the group...">
+                                            <small id="emailHelp" class="form-text text-muted"></small>
+                                          </div>
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                                        </form>
+
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button-success" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+                                  
+                                  </div>
+                                </div>
+
+
+  </div>
+</div>
+<!-- add this  -->
+
+
+                                
+
+
+                                
+                <hr style="width:90%; background-color:white;">
+
+
+
+
+
+
+
+
+                <!-- https://getbootstrap.com/docs/4.0/components/list-group/ -->
+
+                <div class="list-group">
+                    {%for i in grps%}
+                    <a href="/collabrate/group/{{i.grpname}}/" class="mt-1 list-group-item list-group-item-action flex-column align-items-start active">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{i.grpname}}</h5>
+                        <small>created by : {{i.createdby}}</small>
+                      </div>
+                      <p class="mb-1">{{i.description}}  <small style="float:right";>{{i.date}}</small></p>
+                      
+                      {%for i in participants%}
+                      <span class="badge badge-primary badge-pill">{{i.participants}}</span>
+                     {%endfor%}
+                    </a>
+                   {%endfor%}
+                  </div>
+
+
+
+
+
+
+
+                  <script>
+
+                    
+
+                    //using ws properties
+                      const grpname=JSON.parse(document.getElementById('grpname').textContent)
+                   //var ws=new WebSocket('ws://127.0.0.1:8000/ws/ac/')
+                   var ws=new WebSocket(
+                    'ws://'+window.location.host+'/sc/channel-name' )
+                      ws.onopen=function(){
+                           console.log('websocket connection open')
+                          // ws.send('hi message from frount end connection........')
+                       }
+
+
+
+                    </script>
+
+
+
+
+
+
+
+
+
+
+ 
+  
+
+
+    
+
+
+
+
+{% endblock %}

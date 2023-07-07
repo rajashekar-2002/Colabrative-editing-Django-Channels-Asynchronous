@@ -1,0 +1,55 @@
+
+{% extends 'base.html' %}
+{% block notebook %}
+{%load countnotes %}
+{% load notebook_slug_tag %}
+    <div class="container-fluid h-100">
+        <div class="row h-100 ">
+            <div class="col-12 h-100">
+
+           
+          
+
+<header>
+    <nav class="navbar navbar-light bg-light mt-1">
+        <a class="navbar-brand"><h3 class="text-dark">{{count}} tags...</h3></a>
+        <form class="form-inline" action="{% url 'showtag' %}" method="POST">
+            {%csrf_token%}
+          <input class="form-control mr-sm-2 border border-success float" name="tags" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </nav>
+</header>
+               
+
+                
+            
+  
+                <!-- {{i.tags}}
+                <h3 class="text-white">{{i.tags}}</h3> -->
+         {%for i in notes%}
+
+                  <ul class="list-group ">
+
+                    <li class="list-group-item d-flex justify-content-left align-items-center text-dark bg-dark mt-1">
+                      
+                      <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}}" class="text-white">{{i.notes_name}}</a>
+                      {% for j in i.notes_slug|tag:request%}
+                     <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}}"><span class="badge badge-primary ml-2">{{j}}</span></a>
+                      
+                    
+                      {%endfor%}
+                    </li>
+                  </ul>
+
+
+{%endfor%}
+        
+
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
