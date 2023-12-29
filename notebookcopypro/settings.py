@@ -151,7 +151,7 @@ MEDIA_ROOT=BASE_DIR/'media'
 
 EMAIL_HOST ='smtp.gmail.com'
 EMAIL_HOST_USER='rajashekarganiger2002@gmail.com'
-EMAIL_HOST_PASSWORD='gjaxbobtqjdyqfvq'
+EMAIL_HOST_PASSWORD='password here'
 EMAIL_USE_SSL ='True'
 EMAIL_PORT=465
 
